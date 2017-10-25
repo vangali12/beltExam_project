@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<h1>Hello 
+		{% for user in users %}
+			{% if user.id == request.session.currentUser %}
+				{{ user.name }}!
+			{% endif %}
+		{% endfor %}
+		</h1>
+		<a href="users/show/{{ request.session.currentUser }}">My Profile</a> | <a href="/logout">Logout</a></p>
+		<h3>Here is a list of your friends:</h3>
+		<div class=row>
+			<div class='col-md-3'></div>
+			<div class='col-md-6'>
+			{% if not friends %}
+				<p>Looks like you have no friends yet!</p>
+			{% else %}
+				<table class="table table-bordered">
+					<thead>
+						<th>Alias</th>
+						<th>Action</th>
+					</thead>
+					{% for friend in friends %}
+						<tr>
+							<td>{{ friend.to_person.alias }}</td>
+							<td><a href="/users/show/{{ friend.to_person.id }}">View Profile</a> | <a href="/deleteRelationship/{{ friend.to_person.id }}">Remove as Friend</a></td>
+						</tr>					
+					{% endfor %}
+				</table>
+			{% endif %}
+			</div>
+			<div class='col-md-3'></div>
+		</div>
+		<div class="row">
+			<h3>Other Users not on your friend's list:</h3>
+			<div class='col-md-4'>
+			<table class="table table-bordered">
+				<thead>
+					<th>Alias</th>
+					<th>Action</th>
+				</thead>
+				{% for user in users %}
+					{% if user.id == request.session.currentUser %}
+						{{ continue }}
+					{% else %}
+					<tr>
+						<td><a href="/users/show/{{ user.id }}">{{ user.alias }}</a></td>
+						<td><a href="/createRelationship/{{ user.id }}">Add as Friend</a></td>
+					</tr>
+					{% endif %}
+				{% endfor %}
+			</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
